@@ -1,15 +1,22 @@
 "use client";
+import resizeFile from "@/utils/resizeFil";
 import { UserContext } from "@/utils/userContext";
 import axios from "axios";
+import { time } from "console";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
-import Resizer from "react-image-file-resizer";
+
+export enum Gender {
+  MALE = "male",
+  FEMALE = "female",
+  OTHER = "other",
+}
 
 type InputDataType = {
   name: string;
-  photoUrl: string;
   address: string;
   studentNum: string;
   photoBase64: string;
+  gender: Gender;
 };
 
 const UserInfo: React.FC = () => {
@@ -18,27 +25,11 @@ const UserInfo: React.FC = () => {
   const ctx = useContext(UserContext);
   const [inputData, setInputData] = useState<InputDataType>({
     name: "",
-    photoUrl: "",
     address: "",
     studentNum: "",
     photoBase64: "",
+    gender: Gender.MALE,
   });
-
-  const resizeFile = (file: File): Promise<string> =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        300,
-        300,
-        "JPEG",
-        100,
-        0,
-        (uri) => {
-          resolve(uri as string);
-        },
-        "base64"
-      );
-    });
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -80,19 +71,21 @@ const UserInfo: React.FC = () => {
   };
 
   useEffect(() => {
-    if (ctx?.user) {
+    if (ctx?.user1) {
       setInputData({
-        name: ctx.user.name || "",
-        photoUrl: ctx.user.photoUrl || "",
-        address: ctx.user.address || "",
-        studentNum: ctx.user.studentNum || "",
-        photoBase64: ctx.user.photoBase64 || "",
+        name: ctx.user1.name || "",
+        address: ctx.user1.address || "",
+        studentNum: ctx.user1.studentNum || "",
+        photoBase64: ctx.user1.photoBase64 || "",
+        gender: ctx.user1.gender || Gender.MALE,
       });
-      setProfile(ctx.user.photoBase64);
+      setProfile(ctx.user1.photoBase64);
     }
-  }, [ctx?.user]);
+  }, [ctx?.user1]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setInputData((prevData) => ({
       ...prevData,
@@ -124,25 +117,38 @@ const UserInfo: React.FC = () => {
 
           <div>
             <div className="flex gap-4">
-              <div className="text-white">주소</div>
-              <input
+              <div className="text-white">성별</div>
+              <select
                 className="text-slate-800 w-[20rem]"
-                type="text"
-                name="address"
-                value={inputData.address || ""}
+                name="gender"
+                value={inputData.gender}
                 onChange={handleInputChange}
-              />
+              >
+                {Object.values(Gender).map((item) => (
+                  <option key={item} value={item}>
+                    {item.charAt(0).toUpperCase() + item.slice(1)}
+                  </option>
+                ))}
+                {/* <option key="male" value="male">
+                  남성
+                </option>
+                <option key="female" value="female">
+                  여자
+                </option>
+                <option key="other" value="other">
+                  그 외
+                </option> */}
+              </select>
             </div>
           </div>
 
           <div>
             <div className="flex gap-4">
-              <div className="text-white">URL이미지</div>
+              <div className="text-white">주소</div>
               <input
                 className="text-slate-800 w-[20rem]"
                 type="text"
-                name="photoUrl"
-                value={inputData.photoUrl || ""}
+                value={inputData.address || ""}
                 onChange={handleInputChange}
               />
             </div>
@@ -167,29 +173,31 @@ const UserInfo: React.FC = () => {
               </picture>
             </div>
           ) : (
-            <picture>
+            <picture className={`${profile || "hidden"}`}>
               <img src={profile} alt="profile preview" />
             </picture>
           )}
           <div className="flex">
-            <label htmlFor="file">
-              <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                프로필 사진변경
-              </div>
-            </label>
-            {resizedImage && (
-              <button
-                className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() =>
-                  setInputData((prev) => ({
-                    ...prev,
-                    photoBase64: profile || "",
-                  }))
-                }
-              >
-                복구
-              </button>
-            )}
+            <div className="flex gap-10">
+              <label htmlFor="file">
+                <div className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
+                  프로필 사진변경
+                </div>
+              </label>
+              {resizedImage && (
+                <button
+                  className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() =>
+                    setInputData((prev) => ({
+                      ...prev,
+                      photoBase64: profile || "",
+                    }))
+                  }
+                >
+                  복구
+                </button>
+              )}
+            </div>
 
             <input
               style={{ display: "none" }}

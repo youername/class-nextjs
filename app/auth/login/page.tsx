@@ -86,7 +86,7 @@ export default function Login() {
             <div className="h-[0px] border-b w-full" />
           </div>
           <div className="mx-auto text-center flex flex-col gap-6 my-6 text-sm text-[#385185]">
-            <Link href="/auth/register" className="font-bold">
+            <Link href="/auth/signUp" className="font-bold">
               Sign up
             </Link>
             <div className="text-xs font-medium">Forgot password?</div>

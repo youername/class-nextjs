@@ -42,10 +42,10 @@ const Header: React.FC<Props> = ({}) => {
           </div>
         </div>
         <div className="mx-8 whitespace-nowrap">
-          {userData?.user?.name ? (
+          {userData?.user1?.name ? (
             <div>
               <DropdownMenu menu={userMenu} bgColor={mainColor}>
-                <div className="text-xl">{userData?.user?.name}</div>
+                <div className="text-xl">{userData?.user1?.name}</div>
               </DropdownMenu>
             </div>
           ) : (
@@ -53,7 +53,7 @@ const Header: React.FC<Props> = ({}) => {
               <Link href="/auth/login" className="font-thin">
                 Sign in
               </Link>
-              <Link href="/auth/register">Sign up</Link>
+              <Link href="/auth/signUp">Sign up</Link>
             </div>
           )}
         </div>
