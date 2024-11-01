@@ -14,19 +14,6 @@ type UserType =
       gender: Gender;
     }
   | undefined;
-
-type  =
-  | {
-      id: number;
-      name: string;
-      email: string;
-      address: string;
-      photoBase64: string;
-      studentNum: string;
-      gender: Gender;
-    }
-  | undefined;
-
 interface Props {}
 
 type UserContextType = {

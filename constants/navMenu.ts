@@ -1,5 +1,5 @@
 export const menu: { title: string; url: string }[] = [
-  { title: "Modal", url: "/content/modal" },
+  { title: "Todos", url: "/content/todos" },
   { title: "Research", url: "/content/research" },
   { title: "Innovation", url: "/content/innovation" },
   { title: "Admissions + Aid", url: "/content/admissions-aid" },
