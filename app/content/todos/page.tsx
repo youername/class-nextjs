@@ -27,6 +27,24 @@ const Todos = () => {
     }
   };
 
+  const handleKeyDown = async (e: React.KeyboardEvent) => {
+    if (e.key == "Enter") {
+      e.preventDefault();
+      if (e.nativeEvent.isComposing) {
+        return;
+      } else if (newTodoInput.replace(/\s/g, "") !== "") {
+        const newTodo = await createTodoFatch({ title: newTodoInput });
+        setNewTodoInput("");
+        if (newTodo) {
+          setTodos([
+            ...todos,
+            { title: newTodoInput, isDone: false, id: newTodo },
+          ]);
+        }
+      }
+    }
+  };
+
   const deleteHandle = (Id: number) => {
     console.log(Id);
     const filtered = todos.filter((todo) => todo.id !== Id);
@@ -66,6 +84,7 @@ const Todos = () => {
           placeholder="여기에 입력하세요"
           className="text-black text-3xl p-2 max-w-[26rem]"
           onChange={(e) => setNewTodoInput(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
 
         {/* <button
